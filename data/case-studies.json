@@ -1,0 +1,239 @@
+[
+ {
+  "id": "altostrat",
+  "name": "Altostrat Media",
+  "tagline": "Media & entertainment - generative AI content pipeline on a hybrid estate",
+  "sections": [
+   {
+    "title": "Company overview",
+    "body": [
+     "Altostrat Media produces and distributes long-form audio and video: podcasts, recorded interviews, and documentary series. Its library spans roughly 40 years of material, and about 60% of it has never been catalogued beyond a title and a recording date.",
+     "The company earns revenue from subscriptions, dynamic ad insertion, and licensing archive footage to third parties."
+    ]
+   },
+   {
+    "title": "Solution concept",
+    "body": [
+     "Altostrat wants to use generative AI to make the archive commercially useful: auto-generate episode summaries and chapter markers, extract structured metadata (speakers, topics, locations, entities) from audio and video, and power a natural-language interface so subscribers and licensing customers can find material conversationally.",
+     "A second goal is a 24/7 conversational support agent, and a third is dynamic pricing for ad inventory driven by engagement data."
+    ]
+   },
+   {
+    "title": "Existing technical environment",
+    "body": [
+     "Streaming and transcoding services run on GKE across two regions. A set of stateless ingest workers runs on Cloud Run.",
+     "The master media library sits in Cloud Storage; roughly 3 PB total, of which about 85% has not been accessed in over a year but must remain immediately retrievable for licensing requests.",
+     "Engagement and ad telemetry land in BigQuery. Editorial and rights-management systems are legacy applications still running in a leased data centre, connected today over a single 1 Gbps IPsec VPN tunnel.",
+     "Identity is split: staff use Google Workspace, while a third-party OIDC provider fronts the partner and licensee portal.",
+     "Observability is fragmented - Cloud Monitoring for the GKE estate, self-hosted Prometheus and Grafana for the data-centre applications."
+    ]
+   },
+   {
+    "title": "Business requirements",
+    "body": [
+     "Improve reliability across the hybrid estate; editorial outages currently stall publishing.",
+     "Reduce storage spend on the archive without hurting licensing turnaround times.",
+     "Provide always-on natural-language support for subscribers.",
+     "Automatically summarise and tag new and archival content.",
+     "Detect and filter inappropriate or non-compliant material before publication.",
+     "Be able to explain and audit any AI-generated decision that affects rights, pricing, or moderation."
+    ]
+   },
+   {
+    "title": "Technical requirements",
+    "body": [
+     "Modernise CI/CD for container workloads with verifiable provenance.",
+     "Replace the single VPN tunnel with resilient private connectivity to the data centre.",
+     "Scale the Kubernetes estate without per-cluster manual toil.",
+     "Optimise object storage cost while keeping millisecond-to-seconds retrieval.",
+     "Apply content moderation to generated and ingested media.",
+     "Guard the conversational agent against prompt injection and data leakage.",
+     "Unify logs and metrics from both the cloud and data-centre estates."
+    ]
+   },
+   {
+    "title": "Executive statement",
+    "body": [
+     "\"Our archive is our balance sheet, and right now most of it is invisible. I want every minute of it searchable, priceable, and safe to publish - and I want to be able to explain to a rights holder exactly why our system made a call.\" - CTO, Altostrat Media"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "cymbal",
+  "name": "Cymbal Retail",
+  "tagline": "Online retail - catalogue enrichment, conversational commerce, legacy modernisation",
+  "sections": [
+   {
+    "title": "Company overview",
+    "body": [
+     "Cymbal Retail is an online marketplace selling across apparel, home goods, and consumer electronics. It lists roughly 4 million SKUs from about 2,800 suppliers, and the catalogue grows 15-20% per quarter.",
+     "Suppliers submit product data in wildly inconsistent formats; a team of 90 people currently normalises it by hand."
+    ]
+   },
+   {
+    "title": "Solution concept",
+    "body": [
+     "Three initiatives. First, automated catalogue enrichment: derive structured product attributes from unstructured supplier feeds, and generate additional product image variants (alternate backgrounds and colourways) rather than commissioning new photography.",
+     "Second, conversational commerce: an AI shopping agent that handles natural-language product discovery, comparison, and order placement, replacing the current IVR-plus-call-centre flow.",
+     "Third, modernising the technical stack off the legacy batch systems."
+    ]
+   },
+   {
+    "title": "Existing technical environment",
+    "body": [
+     "A hybrid estate. Storefront web applications are custom PHP and Java, running on VMs in two on-premises data centres, with a small Kubernetes footprint in the cloud used for newer services.",
+     "Data is spread across MySQL (orders), Microsoft SQL Server (finance and supplier contracts), Redis (session and cart), and MongoDB (product catalogue documents).",
+     "Supplier feeds arrive by SFTP and are processed by a nightly ETL job written in Perl; a failed run means the catalogue is stale for 24 hours.",
+     "Call centre agents key orders manually into an internal admin tool after an IVR collects caller intent.",
+     "Monitoring is Nagios, Grafana, and a self-managed Elastic cluster for logs."
+    ]
+   },
+   {
+    "title": "Business requirements",
+    "body": [
+     "Cut manual catalogue work substantially while improving attribute accuracy.",
+     "Improve product findability and on-site search conversion.",
+     "Provide an interactive, personalised shopping experience across web and voice.",
+     "Reduce operational cost, particularly call-centre headcount per order.",
+     "Onboard a new supplier's full catalogue in hours rather than weeks."
+    ]
+   },
+   {
+    "title": "Technical requirements",
+    "body": [
+     "Accurately derive relevant product attributes from heterogeneous supplier data.",
+     "Generate image variations with background and colour modifications at catalogue scale.",
+     "Process natural-language shopping queries with sub-second response.",
+     "Provide a human-in-the-loop review interface before enriched data is published.",
+     "Scale elastically through seasonal peaks that run 8x baseline traffic.",
+     "Keep payment and personal data compliant with PCI DSS and regional privacy law.",
+     "Move off the nightly batch window to continuous ingestion."
+    ]
+   },
+   {
+    "title": "Executive statement",
+    "body": [
+     "\"We are paying ninety people to retype supplier spreadsheets, and our customers still cannot find the product they want. Fix both, and do not put our cardholder data at risk doing it.\" - COO, Cymbal Retail"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "ehr",
+  "name": "EHR Healthcare",
+  "tagline": "Healthcare SaaS - colocation exit, regulated data, 99.9% availability",
+  "sections": [
+   {
+    "title": "Company overview",
+    "body": [
+     "EHR Healthcare is a SaaS provider of electronic health record software to medium and large medical practices, insurance providers, and clinics across several countries. Growth has been rapid, largely through acquiring regional competitors."
+    ]
+   },
+   {
+    "title": "Solution concept",
+    "body": [
+     "EHR wants to exit its colocation facilities and move to Google Cloud to add capacity for growth, get a credible disaster recovery posture, and move from quarterly release trains to continuous deployment.",
+     "Leases on two of the three colocation facilities expire within 18 months and will not be renewed."
+    ]
+   },
+   {
+    "title": "Existing technical environment",
+    "body": [
+     "Customer-facing web applications are containerised and already run on Kubernetes in the colocation facilities, but each site is managed independently with divergent cluster versions.",
+     "Databases: MySQL for patient scheduling, Microsoft SQL Server for billing and claims, Redis for session caching, MongoDB for document-oriented clinical notes.",
+     "Legacy integrations with insurance providers use scheduled SFTP file drops and a handful of SOAP APIs; several insurers will not change their integration method.",
+     "User and identity management runs on Microsoft Active Directory.",
+     "Monitoring is a mix of open-source tools per site, with no aggregated view; incidents are typically detected by customers first."
+    ]
+   },
+   {
+    "title": "Business requirements",
+    "body": [
+     "Onboard new insurance providers as quickly as possible.",
+     "Maintain 99.9% availability for customer-facing systems.",
+     "Provide centralised visibility of the performance of all deployed applications.",
+     "Derive insights on industry and healthcare trends from aggregated data.",
+     "Reduce infrastructure administration cost.",
+     "Maintain regulatory compliance for protected health information at all times, including during migration."
+    ]
+   },
+   {
+    "title": "Technical requirements",
+    "body": [
+     "Maintain legacy interfaces to insurance providers during and after migration.",
+     "Manage containerised workloads consistently across environments.",
+     "Provide a secure, reliable, high-performance link between colocation facilities and Google Cloud for the duration of the migration.",
+     "Provide consistent logging, log retention, monitoring, and alerting.",
+     "Scale environments dynamically based on load.",
+     "Provide a data ingestion interface that new providers can adopt without bespoke engineering."
+    ]
+   },
+   {
+    "title": "Executive statement",
+    "body": [
+     "\"Our customers learn about our outages before we do, and our auditors are asking harder questions every year. I need availability we can prove and compliance we can evidence, without a big-bang cutover.\" - CEO, EHR Healthcare"
+    ]
+   }
+  ]
+ },
+ {
+  "id": "knightmotives",
+  "name": "KnightMotives Automotive",
+  "tagline": "Automotive - connected-vehicle IoT, edge inference, MLOps at fleet scale",
+  "sections": [
+   {
+    "title": "Company overview",
+    "body": [
+     "KnightMotives Automotive manufactures commercial vehicles and operates a connected-fleet telematics service used by logistics customers. About 900,000 vehicles are connected, generating telemetry continuously while in service."
+    ]
+   },
+   {
+    "title": "Solution concept",
+    "body": [
+     "KnightMotives wants predictive maintenance and driver-safety alerting that works in real time. Some inference must run in the vehicle or at the depot, because vehicles routinely operate with intermittent or no connectivity, and a safety alert that arrives ten minutes late is worthless.",
+     "Aggregated telemetry should feed centralised model training, with retrained models pushed back out to the fleet on a controlled schedule."
+    ]
+   },
+   {
+    "title": "Existing technical environment",
+    "body": [
+     "Each vehicle has a telematics unit emitting roughly 200 signals per second: engine, drivetrain, braking, GPS, and camera-derived events.",
+     "Depots have modest on-site compute - a few rack servers per site across 140 depots - currently used only for local file caching.",
+     "Ingestion today is a fleet of self-managed MQTT brokers on VMs, which have repeatedly failed under regional traffic spikes.",
+     "Historical telemetry, about 900 TB, sits in Cloud Storage and is queried inconsistently; analysts mostly extract CSVs and work locally.",
+     "There is no formal model lifecycle: data scientists train on laptops, hand a serialised model to platform engineers, and deployment is manual.",
+     "Vehicle telemetry includes driver identity and location, which is regulated differently in each market KnightMotives sells into."
+    ]
+   },
+   {
+    "title": "Business requirements",
+    "body": [
+     "Reduce unplanned vehicle downtime for fleet customers.",
+     "Deliver safety-critical alerts to the driver within one second of the triggering event.",
+     "Continue operating when a vehicle or depot is disconnected from the network.",
+     "Support data residency requirements that differ by market.",
+     "Reduce time from model retraining to fleet-wide rollout from months to days.",
+     "Contain the cost of storing and querying telemetry as the fleet grows."
+    ]
+   },
+   {
+    "title": "Technical requirements",
+    "body": [
+     "Ingest high-volume time-series telemetry reliably, absorbing regional spikes without loss.",
+     "Run inference at the edge with a managed, remotely updatable runtime.",
+     "Provide a reproducible, automated ML lifecycle from training through staged rollout.",
+     "Serve low-latency point lookups of recent per-vehicle state alongside large historical analytics.",
+     "Enforce residency and de-identify driver PII before it reaches analytics.",
+     "Roll back a bad model to the previous version across the fleet quickly."
+    ]
+   },
+   {
+    "title": "Executive statement",
+    "body": [
+     "\"A truck that stops on a motorway costs our customer more than the truck earns in a week. We have the data to see it coming - we just cannot get a model from a data scientist's laptop into a vehicle in less than a quarter.\" - VP Engineering, KnightMotives Automotive"
+    ]
+   }
+  ]
+ }
+]
